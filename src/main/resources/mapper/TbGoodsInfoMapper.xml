@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.longines.dao.TbGoodsInfoMapper" >
+   <select id="findGoodsByPriceDesc" resultType="com.longines.pojo.TbGoodsInfo">
+      select * from tb_goods_info order by price desc;
+    </select>
+    <select id="findGoodsByPriceAsc" resultType="com.longines.pojo.TbGoodsInfo">
+      select * from tb_goods_info order by price  asc;
+    </select>
+  <select id="findGoodsByTheme" parameterType="String" resultType="com.longines.pojo.TbGoodsInfo">
+        select * from tb_goods_info where brand=#{brand}
+    </select>
+    <select id="findGoodsInfoBysTimeDesc" resultType="com.longines.vo.TbGoodsInfoExt">
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,g_pic2,g_pic3,tb_mg_associated.s_time,tb_mg_associated.m_id,tb_merce.m_pic
+        FROM tb_goods_info,tb_mg_associated,tb_merce
+        WHERE tb_goods_info.g_id=tb_mg_associated.g_id
+        and
+              tb_mg_associated.m_id=tb_merce.m_id
+        ORDER BY s_time desc;
+    </select>
+    <select id="findGoodsInfoBysTimeAsc" resultType="com.longines.vo.TbGoodsInfoExt">
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,g_pic2,g_pic3,tb_mg_associated.s_time,tb_mg_associated.m_id,tb_merce.m_pic
+        FROM tb_goods_info,tb_mg_associated,tb_merce
+        WHERE tb_goods_info.g_id=tb_mg_associated.g_id
+        and
+              tb_mg_associated.m_id=tb_merce.m_id
+        ORDER BY s_time asc;
+    </select>
+    <select id="findGoodsInfoByLike" parameterType="Long" resultType="com.longines.pojo.TbGoodsInfo">
+        select * from tb_goods_info where  price between #{price}-500 and #{price}+500;
+    </select>
+    <select id="findAllGoodsInfo" resultType="com.longines.pojo.TbGoodsInfo">
+        select * from tb_goods_info;
+    </select>
+    <select id="findGoodsDetailById" parameterType="Integer" resultType="com.longines.vo.TbGoodsInfoExt">
+      SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,g_pic2,g_pic3,tb_merce.sname,tb_merce.m_pic,tb_merce.m_id
+        FROM tb_goods_info,tb_mg_associated,tb_merce
+        WHERE #{id}=tb_goods_info.g_id
+        AND tb_goods_info.`g_id`=tb_mg_associated.`g_id`
+        AND
+              tb_mg_associated.m_id=tb_merce.m_id
+    </select>
+    <select id="findBrandGoodsByPriceDesc" parameterType="String" resultType="com.longines.pojo.TbGoodsInfo">
+      select * from tb_goods_info where brand=#{brand} order by price desc;
+    </select>
+    <select id="findBrandGoodsByPriceAsc" parameterType="String" resultType="com.longines.pojo.TbGoodsInfo">
+      select * from tb_goods_info where brand=#{brand} order by price Asc;
+    </select>
+    <select id="findBrandGoodsInfoBysTimeAsc" parameterType="String" resultType="com.longines.vo.TbGoodsInfoExt">
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,g_pic2,g_pic3,tb_mg_associated.s_time,tb_mg_associated.m_id,tb_merce.m_pic
+        FROM tb_goods_info,tb_mg_associated,tb_merce
+        WHERE tb_goods_info.brand=#{brand}
+        and tb_goods_info.g_id=tb_mg_associated.g_id
+        and tb_mg_associated.m_id=tb_merce.m_id
+        ORDER BY s_time asc;
+    </select>
+    <select id="findBrandGoodsInfoBysTimeDesc" parameterType="String" resultType="com.longines.vo.TbGoodsInfoExt">
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,g_pic2,g_pic3,tb_mg_associated.s_time,tb_mg_associated.m_id,tb_merce.m_pic
+        FROM tb_goods_info,tb_mg_associated,tb_merce
+        WHERE tb_goods_info.brand=#{brand}
+        and tb_goods_info.g_id=tb_mg_associated.g_id
+        and tb_mg_associated.m_id=tb_merce.m_id
+        ORDER BY s_time desc;
+    </select>
+    <!-- 根据商品名称查询商品信息 -->
+    <select id="selectBygName" parameterType="String" resultType="com.longines.vo.TbSearchGoodsInfoVo" >
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,tb_mg_associated.s_time
+        FROM tb_goods_info,tb_mg_associated
+        WHERE gname
+        LIKE '%${value}%'
+        AND tb_goods_info.g_id=tb_mg_associated.g_id
+    </select>
+
+    <!--价格由高到低-->
+    <select id="selectBygNamePUD" parameterType="String" resultType="com.longines.vo.TbSearchGoodsInfoVo" >
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,tb_mg_associated.s_time
+        FROM tb_goods_info,tb_mg_associated
+        WHERE gname
+        LIKE '%${value}%'
+        AND tb_goods_info.g_id=tb_mg_associated.g_id
+        ORDER BY tb_goods_info.price DESC
+   </select>
+
+    <!--价格由低到高-->
+    <select id="selectBygNamePDU" parameterType="String" resultType="com.longines.vo.TbSearchGoodsInfoVo" >
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,tb_mg_associated.s_time
+        FROM tb_goods_info,tb_mg_associated
+        WHERE gname
+        LIKE '%${value}%'
+        AND tb_goods_info.g_id=tb_mg_associated.g_id
+        ORDER BY tb_goods_info.price
+    </select>
+
+    <!--上架时间由晚到早 -->
+    <select id="selectBygNameTUD" parameterType="String" resultType="com.longines.vo.TbSearchGoodsInfoVo" >
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,tb_mg_associated.s_time
+        FROM tb_goods_info,tb_mg_associated
+        WHERE gname
+        LIKE '%${value}%'
+        AND tb_goods_info.g_id=tb_mg_associated.g_id
+        ORDER BY tb_mg_associated.s_time DESC
+    </select>
+
+    <!--上架时间由早到晚 -->
+    <select id="selectBygNameTDU" parameterType="String" resultType="com.longines.vo.TbSearchGoodsInfoVo" >
+        SELECT tb_goods_info.g_id,gname,brand,price,the_id,mov,func,a_peo,dial,strap,w_but,g_pic,tb_mg_associated.s_time
+        FROM tb_goods_info,tb_mg_associated
+        WHERE gname
+        LIKE '%${value}%'
+        AND tb_goods_info.g_id=tb_mg_associated.g_id
+        ORDER BY tb_mg_associated.s_time
+    </select>
+    <select id="selectPrice" resultType="integer" parameterType="java.lang.Integer" >
+    select
+    price
+    from tb_goods_info
+    where g_id = #{gId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_goods_info
+    where g_id = #{gId,jdbcType=INTEGER}
+  </select>
+  <sql id="Base_Column_List" >
+    g_id, gname, brand, price, the_id, mov, func, a_peo, dial, strap, w_but, g_pic, createtime,
+    updatetime, g_pic2, g_pic3
+  </sql>
+    <resultMap id="BaseResultMap" type="com.longines.pojo.TbGoodsInfo" >
+        <id column="g_id" property="gId" jdbcType="INTEGER" />
+        <result column="gname" property="gname" jdbcType="VARCHAR" />
+        <result column="brand" property="brand" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="the_id" property="theId" jdbcType="VARCHAR" />
+        <result column="mov" property="mov" jdbcType="VARCHAR" />
+        <result column="func" property="func" jdbcType="VARCHAR" />
+        <result column="a_peo" property="aPeo" jdbcType="VARCHAR" />
+        <result column="dial" property="dial" jdbcType="VARCHAR" />
+        <result column="strap" property="strap" jdbcType="VARCHAR" />
+        <result column="w_but" property="wBut" jdbcType="VARCHAR" />
+        <result column="g_pic" property="gPic" jdbcType="VARCHAR" />
+        <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+        <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+        <result column="g_pic2" property="gPic2" jdbcType="VARCHAR" />
+        <result column="g_pic3" property="gPic3" jdbcType="VARCHAR" />
+    </resultMap>
+</mapper>
